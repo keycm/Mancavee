@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'config.php';
-require_once __DIR__ . '/mailer.php';
+
 
 $error = '';
 $success = '';
@@ -52,7 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>";
                
-                send_email($email, $subject, $body);
+                $mail = require __DIR__ . '/reset_mailer.php';
+                $mail->addAddress($email);
+                $mail->Subject = $subject;
+                $mail->isHTML(true);
+                $mail->Body = $body;
+                $mail->send();
                
                 $_SESSION['reset_user_id'] = $user['id'];
                 $_SESSION['reset_email'] = $email;
